@@ -1,5 +1,6 @@
 import 'package:emarket/features/auth/domain/auth_failure.dart';
 import 'package:emarket/features/auth/providers/auth_provider.dart';
+import 'package:emarket/features/presentation/signup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -14,6 +15,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formkey = GlobalKey<FormState>();
+  bool _isLoading = false;
   @override
   void dispose() {
     _emailController.dispose();
@@ -23,6 +25,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   Future<void> _logIn() async {
     if (!_formkey.currentState!.validate()) return;
+    setState(() {
+      _isLoading = true;
+    });
     try {
       await ref
           .read(authRepositoryProvider)
@@ -34,6 +39,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       if (!mounted) return;
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(e.message)));
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
 
@@ -111,16 +122,23 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             TextButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=>SignupScreen()));
+                              },
                               child: Text(
                                 'Create Account',
                                 style: TextStyle(fontSize: 12),
                               ),
                             ),
-                            ElevatedButton.icon(
-                              onPressed: _logIn,
-                              label: Text('LogIn'),
-                              icon: Icon(Icons.login),
+                            ElevatedButton(
+                              onPressed: _isLoading ? null : _logIn,
+                              child: _isLoading
+                                  ? const SizedBox(
+                                      width: 20,
+                                      height: 20,
+                                      child: CircularProgressIndicator(strokeWidth: 2,),
+                                    )
+                                  : Text('Login'),
                             ),
                           ],
                         ),
