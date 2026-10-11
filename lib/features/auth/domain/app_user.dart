@@ -28,7 +28,7 @@ class AppUser {
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
+      
       'name': name,
       'photoUrl': photoUrl,
       'createdAt': FieldValue.serverTimestamp(),
