@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "1002889738758",
+    "firebase_url": "https://emarket-8541b-default-rtdb.firebaseio.com",
+    "project_id": "emarket-8541b",
+    "storage_bucket": "emarket-8541b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1002889738758:android:17cf3d0af4f2f5de55a187",
+        "android_client_info": {
+          "package_name": "com.example.emarket"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-Ih7jtPkVjSW8GTwOZ9NFgQLM2HsVoSs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
