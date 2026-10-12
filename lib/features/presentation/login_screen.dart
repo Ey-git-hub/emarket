@@ -3,6 +3,7 @@ import 'package:emarket/features/auth/providers/auth_provider.dart';
 import 'package:emarket/features/presentation/signup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -50,6 +51,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+   
     return Scaffold(
       appBar: AppBar(),
       body: Center(
@@ -123,7 +125,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           children: [
                             TextButton(
                               onPressed: () {
-                                Navigator.push(context, MaterialPageRoute(builder: (context)=>SignupScreen()));
+                                context.push('/signUp');
                               },
                               child: Text(
                                 'Create Account',
@@ -136,7 +138,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                   ? const SizedBox(
                                       width: 20,
                                       height: 20,
-                                      child: CircularProgressIndicator(strokeWidth: 2,),
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                      ),
                                     )
                                   : Text('Login'),
                             ),
