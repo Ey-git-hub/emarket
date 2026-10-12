@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emarket/features/auth/data/firebase_auth_repository.dart';
+// import 'package:emarket/features/auth/domain/app_user.dart';
 import 'package:emarket/features/auth/domain/auth_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,3 +11,6 @@ final authRepositoryProvider = Provider<AuthRepository>(
     FirebaseAuth.instance,
   ),
 );
+final authStreamProvider=StreamProvider<String?>((ref){
+return ref.watch(authRepositoryProvider).authStateChanges();
+});
