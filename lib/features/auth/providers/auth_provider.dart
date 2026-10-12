@@ -11,6 +11,6 @@ final authRepositoryProvider = Provider<AuthRepository>(
     FirebaseAuth.instance,
   ),
 );
-final authStreamProvider=StreamProvider<String?>((ref){
+final authStateProvider=StreamProvider<String?>((ref){
 return ref.watch(authRepositoryProvider).authStateChanges();
 });
