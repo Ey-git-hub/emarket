@@ -1,4 +1,5 @@
 
+import 'package:emarket/app/router.dart';
 import 'package:emarket/features/presentation/login_screen.dart';
 import 'package:emarket/firebase_options.dart';
 
@@ -27,7 +28,8 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         cardTheme: CardThemeData()
       ),
-      home: const LoginScreen(),
+      
+      home: MaterialApp.router(routerConfig: router,) ,
     );
   }
 }
