@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emarket/features/items/domain/items.dart';
-import 'package:emarket/features/items/domain/items_repository.dart';
+import 'package:emarket/features/items/domain/item_repository.dart';
 
 class FirestoreItemRepository implements ItemsRepository {
   FirestoreItemRepository(this._db);
