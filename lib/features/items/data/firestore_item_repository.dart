@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:emarket/features/items/domain/item_failure.dart';
 import 'package:emarket/features/items/domain/items.dart';
 import 'package:emarket/features/items/domain/item_repository.dart';
+import 'package:flutter/material.dart';
 
 class FirestoreItemRepository implements ItemsRepository {
   FirestoreItemRepository(this._db);
@@ -8,8 +10,25 @@ class FirestoreItemRepository implements ItemsRepository {
   CollectionReference<Map<String, dynamic>> get _items =>
       _db.collection('items');
   @override
+  @override
   Future<void> addItem(Item item) async {
-    await _items.add(item.toJson());
+    try {
+      await _items.add(item.toJson());
+    } on FirebaseException catch (e) {
+      debugPrint('addItem failed: ${e.code}');
+      throw ItemFailure(_messageFor(e.code));
+    }
+  }
+
+  String _messageFor(String code) {
+    switch (code) {
+      case 'permission-denied':
+        return 'You do not have permission to do that.';
+      case 'unavailable':
+        return 'No connection. Please try again.';
+      default:
+        return 'Something went wrong. Please try again.';
+    }
   }
 
   @override
