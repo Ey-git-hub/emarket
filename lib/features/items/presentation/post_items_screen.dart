@@ -1,5 +1,10 @@
+import 'package:emarket/features/auth/providers/user_provider.dart';
 import 'package:emarket/features/items/domain/catagory.dart';
 import 'package:emarket/features/items/domain/condition.dart';
+import 'package:emarket/features/items/domain/item_failure.dart';
+import 'package:emarket/features/items/domain/item_status.dart';
+import 'package:emarket/features/items/domain/items.dart';
+import 'package:emarket/features/items/providers/items_provider.dart';
 // import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -19,7 +24,7 @@ class _PostItemsScreenState extends ConsumerState<PostItemsScreen> {
   final _priceController = TextEditingController();
   Catagory _catagory = Catagory.books;
   Condition _condition = Condition.brandNew;
-
+  bool isLoading = false;
   @override
   void dispose() {
     _nameController.dispose();
@@ -28,10 +33,48 @@ class _PostItemsScreenState extends ConsumerState<PostItemsScreen> {
     super.dispose();
   }
 
-  void _submitForm() {
+  Future<void> _post() async {
     if (_formKey.currentState!.validate()) {
       return;
     }
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      final user = await ref.read(currentUserProvider.future);
+      if (user == null) {
+        throw const ItemFailure('Your Profile is not ready .Please try  again');
+      }
+      final price = double.tryParse(
+        _priceController.text.trim().replaceAll(',', ''),
+      );
+      if (price == null) return;
+      final name = _nameController.text.trim();
+      final description = _descriptionController.text.trim();
+      final item = Item(
+        id: '',
+        sellerId: user.id,
+        sellerName: user.name,
+        name: name,
+        price: price,
+        category: _catagory,
+        condition: _condition,
+        status: ItemStatus.active,
+        photoUrls: [],
+        createdAt: DateTime.now(),
+        description: description.isEmpty ? null : description,
+      );
+      await ref.read(itemRepositoryProvider).addItem(item);
+      if (!mounted) return;
+      context.pop();
+    } on ItemFailure catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.message)));
+    } finally {
+      if (mounted) setState(() => isLoading = false);
+    }
+
     // context.push('/postItems');
   }
 
@@ -151,8 +194,14 @@ class _PostItemsScreenState extends ConsumerState<PostItemsScreen> {
             ),
             SizedBox(height: 13),
             ElevatedButton(
-              onPressed: _submitForm,
-              child: const Text('Post Item'),
+              onPressed: isLoading ? null : _post,
+              child: isLoading
+                  ? SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Text('Post Item'),
             ),
           ],
         ),
