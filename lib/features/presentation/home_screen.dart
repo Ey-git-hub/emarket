@@ -1,5 +1,6 @@
 import 'package:emarket/features/auth/providers/auth_provider.dart';
 import 'package:emarket/features/auth/providers/user_provider.dart';
+import 'package:emarket/features/items/presentation/widgets/item_card.dart';
 import 'package:emarket/features/items/providers/items_provider.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter/src/widgets/framework.dart';
@@ -13,7 +14,7 @@ class HomeScreen extends ConsumerWidget {
     final itemsAsync = ref.watch(itemStreamProvider);
     final userAsync = ref.watch(currentUserProvider);
     // final items=ref.watch(itemStreamProvider);
-    final noContent=Center(child: Text('No items for now'),);
+    final noContent = Center(child: Text('No items for now'));
     return Scaffold(
       appBar: AppBar(
         title: Text('eMarket'),
@@ -32,61 +33,23 @@ class HomeScreen extends ConsumerWidget {
           ),
         ],
       ),
-      body: Padding(
-        padding: EdgeInsets.all(3),
-        child: SingleChildScrollView(
-          padding: EdgeInsets.all(16),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              itemsAsync.when(
-                data: (item) {
-                  return GridView.builder(
-                    itemCount: item.length,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                    ),
-                    itemBuilder: ((context, index) {
-                      final i = item[index];
-                      return Card(
-                        child: 
-                          Text(
-                            i.name,
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 16,
-                            ),
-                          ),
-                        
-                      );
-                    }),
-                  );
-                },
-                error: (error, stack) => Text('Error $error'),
-                loading: () =>
-                    Center(child: CircularProgressIndicator(strokeWidth: 4)),
-              ),
-
-              // itemsAsync.when(
-              //   data: (data) => Text('Items: ${data.length}'),
-              //   error: (Object error, StackTrace stackTrace) {
-              //     return Text('error $error');
-              //   },
-
-              //   loading: () {
-              //     return CircularProgressIndicator();
-              //   },
-              // ),
-              // userAsync.when(
-              //   data: (user) => Text('Hello, ${user?.name ?? 'no profile'}'),
-              //   loading: () => const CircularProgressIndicator(),
-              //   error: (e, st) => Text('Error: $e'),
-              // ),
-            ],
-          ),
-        ),
+      body: itemsAsync.when(
+        data: (item) {
+          return GridView.builder(
+            itemCount: item.length,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+            ),
+            itemBuilder: (context, index) {
+              final i = item[index];
+              return ItemCard(item: i,);
+            },
+          );
+        },
+        error: (error, stack) =>
+            Center(child: Text('Error occured displaying items')),
+        loading: () =>
+            const Center(child: CircularProgressIndicator(strokeWidth: 4)),
       ),
     );
   }
