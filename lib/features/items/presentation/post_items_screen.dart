@@ -34,9 +34,7 @@ class _PostItemsScreenState extends ConsumerState<PostItemsScreen> {
   }
 
   Future<void> _post() async {
-    if (_formKey.currentState!.validate()) {
-      return;
-    }
+    if (!(_formKey.currentState?.validate() ?? false)) return;
     setState(() {
       isLoading = true;
     });
