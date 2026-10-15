@@ -9,7 +9,6 @@ class ItemDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(item.name),
         actions: [
           IconButton(onPressed: () {}, icon: Icon(Icons.shopping_cart)),
         ],
@@ -66,12 +65,33 @@ class ItemDetailsScreen extends StatelessWidget {
                 ),
               ],
             ),
-            Padding(
-              padding: EdgeInsets.all(12),
-              child: // SizedBox(height: 10),
-              Text(
-                item.description!,
-                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w300),
+
+            Card(
+              child: Padding(
+                padding: EdgeInsets.all(12),
+                child: Column(
+                  children: [
+                    Text(
+                      item.description!,
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w300,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text('Seller Name: ${item.sellerName}'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {},
+                          child: Text('Contact'),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
