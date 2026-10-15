@@ -1,6 +1,6 @@
 import 'package:emarket/features/auth/domain/auth_failure.dart';
 import 'package:emarket/features/auth/providers/auth_provider.dart';
-import 'package:emarket/features/presentation/signup_screen.dart';
+// import 'package:emarket/features/presentation/signup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -34,7 +34,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           .read(authRepositoryProvider)
           .signIn(
             email: _emailController.text.trim(),
-            password: _passwordController.text.trim(),
+            password: _passwordController.text,
           );
     } on AuthFailure catch (e) {
       if (!mounted) return;
@@ -92,6 +92,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             labelText: 'email',
                             hintText: 'eg.eyob@gmail.com',
                           ),
+                          keyboardType: TextInputType.emailAddress,
+                          textInputAction: TextInputAction.next,
                           validator: (value) {
                             if (value == null || value.trim().isEmpty) {
                               return 'Enter correct email';
