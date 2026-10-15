@@ -43,11 +43,23 @@ class _PostItemsScreenState extends ConsumerState<PostItemsScreen> {
       if (user == null) {
         throw const ItemFailure('Your Profile is not ready .Please try  again');
       }
-      final price = double.tryParse(
-        _priceController.text.trim().replaceAll(',', ''),
-      );
-      if (price == null) return;
       final name = _nameController.text.trim();
+      final priceText = _priceController.text.trim().replaceAll(',', '');
+      final price = double.tryParse(priceText);
+      if (price == null) {
+        throw const ItemFailure('Please enter a valid price');
+      }
+
+      final existingItems = await ref.read(itemStreamProvider.future);
+      final duplicateExists = existingItems.any(
+        (existingItem) =>
+            existingItem.sellerId == user.id &&
+            existingItem.name.trim().toLowerCase() == name.toLowerCase() &&
+            existingItem.price == price,
+      );
+      if (duplicateExists) {
+        throw const ItemFailure('You have already posted this item');
+      }
       final description = _descriptionController.text.trim();
       final item = Item(
         id: '',
@@ -64,6 +76,12 @@ class _PostItemsScreenState extends ConsumerState<PostItemsScreen> {
       );
       await ref.read(itemRepositoryProvider).addItem(item);
       if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Item successfully added'),
+          backgroundColor: Colors.green,
+        ),
+      );
       context.pop();
     } on ItemFailure catch (e) {
       if (!mounted) return;
@@ -127,7 +145,9 @@ class _PostItemsScreenState extends ConsumerState<PostItemsScreen> {
                 ),
               ),
               validator: (value) {
-                final price = double.tryParse(value?.trim() ?? '');
+                final price = double.tryParse(
+                  value?.trim().replaceAll(',', '') ?? '',
+                );
                 if (price == null || price <= 0) {
                   return 'Please enter a valid price';
                 }
