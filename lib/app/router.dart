@@ -1,8 +1,9 @@
+import 'package:emarket/app/main_shell.dart';
 import 'package:emarket/features/auth/providers/auth_provider.dart';
 import 'package:emarket/features/items/presentation/post_items_screen.dart';
 import 'package:emarket/features/items/domain/items.dart';
-import 'package:emarket/features/presentation/home_screen.dart';
-import 'package:emarket/features/presentation/item_details_screen.dart';
+// import 'package:emarket/features/presentation/home/home_screen.dart';
+import 'package:emarket/features/presentation/home/item_details_screen.dart';
 // import 'package:emarket/features/presentation/item_details_screen.dart';
 import 'package:emarket/features/presentation/login_screen.dart';
 import 'package:emarket/features/presentation/signup_screen.dart';
@@ -35,7 +36,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/signUp',
         builder: (context, state) => const SignupScreen(),
       ),
-      GoRoute(path: '/home', builder: (context, state) => HomeScreen()),
+      GoRoute(path: '/home', builder: (context, state) => MainShell()),
       GoRoute(
         path: '/postItem',
         builder: (context, state) => PostItemsScreen(),
