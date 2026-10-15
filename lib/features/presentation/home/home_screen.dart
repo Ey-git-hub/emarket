@@ -23,7 +23,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     _searchController.dispose();
     super.dispose();
   }
-
+  
   @override
   Widget build(BuildContext context) {
     final itemsAsync = ref.watch(itemStreamProvider);
@@ -32,14 +32,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('eMarket'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              ref.read(authRepositoryProvider).signOut();
-            },
-            child: Text('Signout'),
-          ),
-        ],
+        // actions: [
+        //   TextButton(
+        //     onPressed: () {
+        //       ref.read(authRepositoryProvider).signOut();
+        //     },
+        //     child: Text('Signout'),
+        //   ),
+        // ],
       ),
       body: Column(
         children: [
