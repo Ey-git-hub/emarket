@@ -1,54 +1,48 @@
-import 'package:emarket/features/items/presentation/post_items_screen.dart';
-import 'package:emarket/features/presentation/favorites/favorites_screen.dart';
-import 'package:emarket/features/presentation/home/home_screen.dart';
-import 'package:emarket/features/presentation/profile/user_profile_screen.dart';
+import 'package:emarket/app/widgets/app_nav_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
-class MainShell extends StatefulWidget {
-  const MainShell({super.key});
+class MainShell extends StatelessWidget {
+  const MainShell({super.key, required this.child, required this.location});
 
-  @override
-  State<StatefulWidget> createState() {
-    return _MainShellState();
-  }
-}
+  final Widget child;
+  final String location;
 
-class _MainShellState extends State<MainShell> {
-  int _selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
+    final selectedIndex = switch (location) {
+      '/favorites' => 1,
+      '/postItem' => 2,
+      '/profile' => 3,
+      _ => 0,
+    };
+
     return Scaffold(
-      // appBar: AppBar(title: Text('Main shell')),
-      body: IndexedStack(
-        index: _selectedIndex,
+      body: Stack(
+        fit: StackFit.expand,
         children: [
-          HomeScreen(),
-          FavoritesScreen(),
-          PostItemsScreen(),
-          UserProfileScreen(),
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        // selectedItemColor: Colors.orange,
-        unselectedItemColor: Colors.grey,
-        // backgroundColor:  Colors.orange,
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite),
-            label: 'favorites',
+          child,
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: SafeArea(
+              top: false,
+              minimum: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              child: PillBar(
+                options: const [
+                  Option(Icons.home, 'Home'),
+                  Option(Icons.favorite, 'Favorites'),
+                  Option(Icons.add, 'Add'),
+                  Option(Icons.person, 'Profile'),
+                ],
+                selectedIndex: selectedIndex,
+                onSelected: (index) => context.go(_locations[index]),
+              ),
+            ),
           ),
-          BottomNavigationBarItem(icon: Icon(Icons.add), label: 'Add'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],
-        currentIndex: _selectedIndex,
-        onTap: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-        },
       ),
     );
   }
 }
+
+const _locations = ['/home', '/favorites', '/postItem', '/profile'];
