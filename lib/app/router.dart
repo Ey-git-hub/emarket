@@ -2,10 +2,11 @@ import 'package:emarket/app/main_shell.dart';
 import 'package:emarket/features/auth/providers/auth_provider.dart';
 import 'package:emarket/features/items/presentation/post_items_screen.dart';
 import 'package:emarket/features/items/domain/items.dart';
-// import 'package:emarket/features/presentation/home/home_screen.dart';
+import 'package:emarket/features/presentation/favorites/favorites_screen.dart';
+import 'package:emarket/features/presentation/home/home_screen.dart';
 import 'package:emarket/features/presentation/home/item_details_screen.dart';
-// import 'package:emarket/features/presentation/item_details_screen.dart';
 import 'package:emarket/features/presentation/login_screen.dart';
+import 'package:emarket/features/presentation/profile/user_profile_screen.dart';
 import 'package:emarket/features/presentation/signup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -36,10 +37,27 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/signUp',
         builder: (context, state) => const SignupScreen(),
       ),
-      GoRoute(path: '/home', builder: (context, state) => MainShell()),
-      GoRoute(
-        path: '/postItem',
-        builder: (context, state) => PostItemsScreen(),
+      ShellRoute(
+        builder: (context, state, child) =>
+            MainShell(location: state.uri.path, child: child),
+        routes: [
+          GoRoute(
+            path: '/home',
+            builder: (context, state) => const HomeScreen(),
+          ),
+          GoRoute(
+            path: '/favorites',
+            builder: (context, state) => const FavoritesScreen(),
+          ),
+          GoRoute(
+            path: '/postItem',
+            builder: (context, state) => const PostItemsScreen(),
+          ),
+          GoRoute(
+            path: '/profile',
+            builder: (context, state) => const UserProfileScreen(),
+          ),
+        ],
       ),
       GoRoute(
         path: '/itemdetails',
