@@ -17,6 +17,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _passwordController = TextEditingController();
   final _formkey = GlobalKey<FormState>();
   bool _isLoading = false;
+  bool _isObscured = true;
   @override
   void dispose() {
     _emailController.dispose();
@@ -51,7 +52,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-   
     return Scaffold(
       appBar: AppBar(),
       body: Center(
@@ -107,8 +107,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         SizedBox(height: 12),
                         TextFormField(
                           controller: _passwordController,
-                          obscureText: true,
+                          obscureText: _isObscured,
                           decoration: InputDecoration(
+                            suffixIcon: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  _isObscured = !_isObscured;
+                                });
+                              },
+                              icon: Icon(_isObscured? Icons.remove_red_eye_rounded:Icons.visibility_rounded),
+                            ),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
