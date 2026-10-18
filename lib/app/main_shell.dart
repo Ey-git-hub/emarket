@@ -26,13 +26,13 @@ class MainShell extends StatelessWidget {
             alignment: Alignment.bottomCenter,
             child: SafeArea(
               top: false,
-              minimum: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              minimum: const EdgeInsets.fromLTRB(16, 0, 16, 12),
               child: PillBar(
                 options: const [
-                  Option(Icons.home, 'Home'),
-                  Option(Icons.favorite, 'Favorites'),
+                  Option(Icons.home_rounded, 'Home'),
+                  Option(Icons.favorite_border, 'Favorites'),
                   Option(Icons.add, 'Add'),
-                  Option(Icons.person, 'Profile'),
+                  Option(Icons.person_outline, 'Profile'),
                 ],
                 selectedIndex: selectedIndex,
                 onSelected: (index) => context.go(_locations[index]),
