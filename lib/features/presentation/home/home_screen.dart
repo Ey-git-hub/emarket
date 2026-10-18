@@ -2,6 +2,7 @@ import 'package:emarket/features/auth/providers/auth_provider.dart';
 import 'package:emarket/features/auth/providers/user_provider.dart';
 import 'package:emarket/features/items/presentation/widgets/item_card.dart';
 import 'package:emarket/features/items/providers/items_provider.dart';
+import 'package:emarket/features/presentation/widgets/modal_content.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -23,7 +24,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     _searchController.dispose();
     super.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     final itemsAsync = ref.watch(itemStreamProvider);
@@ -31,15 +32,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     // final noContent = Center(child: Text('No items for now'));
     return Scaffold(
       appBar: AppBar(
-        title: Text('eMarket'),
-        // actions: [
-        //   TextButton(
-        //     onPressed: () {
-        //       ref.read(authRepositoryProvider).signOut();
-        //     },
-        //     child: Text('Signout'),
-        //   ),
-        // ],
+        title: const Text(
+          'eMarket',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+        elevation: 0,
       ),
       body: Column(
         children: [
@@ -66,7 +64,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(28),
+                        borderSide: BorderSide.none,
                       ),
+                      filled: true,
+                      fillColor: Theme.of(context)
+                          .colorScheme
+                          .surfaceContainerHighest,
                     ),
                     onChanged: (value) => setState(() {
                       _query = value.trim().toLowerCase();
@@ -74,7 +77,28 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ),
                 ),
               ),
-              IconButton(onPressed: () {}, icon: Icon(Icons.tune)),
+              IconButton(
+                onPressed: () {
+                  showModalBottomSheet(
+                    context: context,
+                    showDragHandle: true,
+                    isScrollControlled: true,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    builder: (context) {
+                      return FractionallySizedBox(
+                        heightFactor: 0.6,
+                        child: Padding(
+                          padding: const EdgeInsets.all(12).copyWith(left: 0),
+                          child: const ModalContent()
+                        ),
+                      );
+                    },
+                  );
+                },
+                icon: Icon(Icons.tune),
+              ),
             ],
           ),
           Expanded(
@@ -84,7 +108,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   itemCount: item.length,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
+                    crossAxisSpacing: 12,
+                    mainAxisSpacing: 12,
+                    childAspectRatio: 0.75,
                   ),
+                  padding: const EdgeInsets.all(12),
                   itemBuilder: (context, index) {
                     final i = item[index];
                     return ItemCard(item: i);
