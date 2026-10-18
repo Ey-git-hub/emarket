@@ -1,7 +1,13 @@
+import 'package:emarket/features/items/domain/catagory.dart';
 import 'package:flutter/material.dart';
 
 class ModalContent extends StatelessWidget {
-  const ModalContent({super.key});
+  const ModalContent({
+    super.key,
+    required this.onCategorySelected,
+  });
+
+  final ValueChanged<Catagory> onCategorySelected;
 
   @override
   Widget build(BuildContext context) {
@@ -14,16 +20,20 @@ class ModalContent extends StatelessWidget {
           style: TextStyle(fontWeight: FontWeight.w300, fontSize: 19),
         ),
         ...[
-          ('Books', Icons.book_sharp),
-          ('Electronics', Icons.desktop_mac),
-          ('Clothing', Icons.checkroom),
-          ('Furniture',Icons.chair),
-          ('Stationery',Icons.document_scanner)
+          (Catagory.books, Icons.book_sharp),
+          (Catagory.electronics, Icons.desktop_mac),
+          (Catagory.clothing, Icons.checkroom),
+          (Catagory.furniture, Icons.chair),
+          (Catagory.stationary, Icons.document_scanner),
+          (Catagory.other, Icons.category),
         ].map(
           (category) => ListTile(
-            onTap: () {},
+            onTap: () {
+              onCategorySelected(category.$1);
+              Navigator.pop(context);
+            },
             leading: CircleAvatar(child: Icon(category.$2)),
-            title: Text(category.$1),
+            title: Text(category.$1.label),
             // trailing: const Icon(Icons.chevron_right),
           ),
         ),
