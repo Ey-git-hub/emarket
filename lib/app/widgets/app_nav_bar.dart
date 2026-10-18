@@ -1,11 +1,5 @@
 import 'package:flutter/material.dart';
 
-class Option {
-  const Option(this.icon, this.label);
-  final IconData icon;
-  final String label;
-}
-
 class PillBar extends StatelessWidget {
   const PillBar({
     super.key,
@@ -58,7 +52,6 @@ class _PillItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-
     return InkWell(
       onTap: onTap,
       customBorder: const StadiumBorder(),
@@ -97,4 +90,10 @@ class _PillItem extends StatelessWidget {
       ),
     );
   }
+}
+
+class Option {
+  const Option(this.icon, this.label);
+  final IconData icon;
+  final String label;
 }
