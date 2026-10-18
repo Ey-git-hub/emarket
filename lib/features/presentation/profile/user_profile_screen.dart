@@ -1,10 +1,13 @@
+import 'package:emarket/features/auth/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class UserProfileScreen extends StatelessWidget {
+class UserProfileScreen extends ConsumerWidget {
 	const UserProfileScreen({super.key});
 
 	@override
-	Widget build(BuildContext context) {
+	Widget build(BuildContext context,WidgetRef ref) {
+    final signOut=ref.watch(authRepositoryProvider);
 		return Scaffold(
 			appBar: AppBar(
 				title: const Text('Profile'),
@@ -33,6 +36,9 @@ class UserProfileScreen extends StatelessWidget {
 								style: Theme.of(context).textTheme.bodyMedium,
 								textAlign: TextAlign.center,
 							),
+              TextButton(onPressed: (){
+                signOut.signOut();
+              }, child: Text('SignOut'))
 						],
 					),
 				),
