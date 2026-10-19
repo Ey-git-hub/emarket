@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:emarket/features/auth/providers/user_provider.dart';
 import 'package:emarket/features/items/domain/catagory.dart';
 import 'package:emarket/features/items/domain/condition.dart';
@@ -9,6 +12,7 @@ import 'package:emarket/features/items/providers/items_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 
 class PostItemsScreen extends ConsumerStatefulWidget {
   const PostItemsScreen({super.key});
@@ -24,6 +28,7 @@ class _PostItemsScreenState extends ConsumerState<PostItemsScreen> {
   final _priceController = TextEditingController();
   Catagory _catagory = Catagory.books;
   Condition _condition = Condition.brandNew;
+  XFile? _selectedImage;
   bool isLoading = false;
   @override
   void dispose() {
@@ -31,6 +36,17 @@ class _PostItemsScreenState extends ConsumerState<PostItemsScreen> {
     _descriptionController.dispose();
     _priceController.dispose();
     super.dispose();
+  }
+
+  Future<void> _imagePicker() async {
+    final image = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+      maxWidth: 1000,
+      maxHeight: 1000,
+      imageQuality: 60,
+    );
+    if (image == null || !mounted) return;
+    setState(() => _selectedImage = image);
   }
 
   Future<void> _post() async {
@@ -60,6 +76,11 @@ class _PostItemsScreenState extends ConsumerState<PostItemsScreen> {
       if (duplicateExists) {
         throw const ItemFailure('You have already posted this item');
       }
+      final photoUrls = <String>[];
+      if (_selectedImage != null) {
+        final imageBytes = await _selectedImage!.readAsBytes();
+        photoUrls.add(base64Encode(imageBytes));
+      }
       final description = _descriptionController.text.trim();
       final item = Item(
         id: '',
@@ -70,7 +91,7 @@ class _PostItemsScreenState extends ConsumerState<PostItemsScreen> {
         category: _catagory,
         condition: _condition,
         status: ItemStatus.active,
-        photoUrls: [],
+        photoUrls: photoUrls,
         createdAt: DateTime.now(),
         description: description.isEmpty ? null : description,
       );
@@ -90,8 +111,6 @@ class _PostItemsScreenState extends ConsumerState<PostItemsScreen> {
     } finally {
       if (mounted) setState(() => isLoading = false);
     }
-
-    // context.push('/postItems');
   }
 
   @override
@@ -139,7 +158,6 @@ class _PostItemsScreenState extends ConsumerState<PostItemsScreen> {
               ),
               decoration: InputDecoration(
                 labelText: 'Price',
-                prefixText: '',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
@@ -210,7 +228,52 @@ class _PostItemsScreenState extends ConsumerState<PostItemsScreen> {
                 ),
               ],
             ),
-            SizedBox(height: 13),
+            SizedBox(height: 8),
+            SizedBox(
+              width: double.infinity,
+              height: 180,
+              child: Center(
+                child: _selectedImage == null
+                    ? ElevatedButton.icon(
+                        onPressed: _imagePicker,
+                        icon: const Icon(Icons.photo_library_outlined),
+                        label: const Text('Choose image'),
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 16,
+                          ),
+                        ),
+                      )
+                    : Stack(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: Image.file(
+                              File(_selectedImage!.path),
+                              width: double.infinity,
+                              height: 180,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          Positioned(
+                            top: 8,
+                            right: 8,
+                            child: IconButton(
+                              onPressed: _imagePicker,
+                              icon: const Icon(Icons.edit),
+                              color: Colors.white,
+                              style: IconButton.styleFrom(
+                                backgroundColor: Colors.black54,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+              ),
+            ),
+
+            SizedBox(height: 8),
             ElevatedButton(
               onPressed: isLoading ? null : _post,
               child: isLoading
