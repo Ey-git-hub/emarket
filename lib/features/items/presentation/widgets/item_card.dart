@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:emarket/features/items/domain/items.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -18,12 +20,23 @@ class ItemCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
-              child: Container(
-                width: double.infinity,
-                alignment: Alignment.center,
-                color: theme.colorScheme.surfaceContainerHighest,
-                child: const Icon(Icons.phone, size: 40),
-              ),
+              child: item.photoUrls.isEmpty
+                  ? Container(
+                      width: double.infinity,
+                      alignment: Alignment.center,
+                      color: theme.colorScheme.surfaceContainerHighest,
+                      child: const Icon(Icons.image_not_supported, size: 40),
+                    )
+                  : Image.memory(
+                      base64Decode(item.photoUrls.first),
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) => Container(
+                        alignment: Alignment.center,
+                        color: theme.colorScheme.surfaceContainerHighest,
+                        child: const Icon(Icons.broken_image, size: 40),
+                      ),
+                    ),
             ),
             Padding(
               padding: EdgeInsets.all(12),
