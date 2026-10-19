@@ -1,6 +1,7 @@
+import 'dart:convert';
+
 import 'package:emarket/features/items/domain/items.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class ItemDetailsScreen extends StatelessWidget {
   const ItemDetailsScreen({super.key, required this.item});
@@ -29,7 +30,16 @@ class ItemDetailsScreen extends StatelessWidget {
                       bottom: Radius.circular(18),
                     ),
                   ),
-                  child: Icon(Icons.phone_android),
+                  child: item.photoUrls.isEmpty
+                      ? const Icon(Icons.image_not_supported, size: 48)
+                      : Image.memory(
+                          base64Decode(item.photoUrls.first),
+                          width: double.infinity,
+                          height: 500,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) =>
+                              const Icon(Icons.broken_image, size: 48),
+                        ),
                 ),
                 // Image.network('https://picsum.photos',width: 500,height: 500,),
                 Positioned(
@@ -71,13 +81,15 @@ class ItemDetailsScreen extends StatelessWidget {
                 padding: EdgeInsets.all(12),
                 child: Column(
                   children: [
-                    Text(
-                      item.description!,
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w300,
+                    if (item.description != null &&
+                        item.description!.isNotEmpty)
+                      Text(
+                        item.description!,
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w300,
+                        ),
                       ),
-                    ),
                     SizedBox(height: 10),
                     Row(
                       children: [
